@@ -3,7 +3,7 @@ from urllib import request
 from flask import Flask, jsonify, render_template, make_response, request
 from flask_restful import Api, Resource
 from pymongo import MongoClient
-import bcrypt
+# import bcrypt
 import validators
 from os import access
 
