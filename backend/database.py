@@ -1,5 +1,7 @@
 from pymongo import MongoClient
 
+from ResponseStatusException import ResponseStatusException
+
 
 class DB:
     def __init__(self):
@@ -21,3 +23,22 @@ def get_user_by_email(email):
     except Exception as e:
         print(e)
         return None
+
+
+def create_user(username, email, password):
+    try:
+        item = db.userCollection.insert_one({
+            "username": username,
+            "email": email,
+            "password": password
+        })
+
+        return {
+            "id": str(item.inserted_id),
+            username: username,
+            email: email,
+            password: password
+        }
+    except Exception as e:
+        print(e)
+        raise ResponseStatusException(400, "Unable to create user")

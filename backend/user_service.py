@@ -1,5 +1,5 @@
 from ResponseStatusException import ResponseStatusException
-from database import get_user_by_email
+from database import get_user_by_email, create_user
 
 
 def verify_login(email, password):
@@ -12,3 +12,11 @@ def verify_login(email, password):
     else:
         print("User not found with email", email)
         raise ResponseStatusException(401, "Invalid credentials")
+
+
+def verify_and_create_user(username, email, password):
+    user = get_user_by_email(email)
+    if user:
+        raise ResponseStatusException(400, "User with this email already exists")
+
+    return create_user(username, email, password)
