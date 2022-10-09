@@ -3,6 +3,7 @@ from urllib import request
 from flask import Flask, request
 from flask_restful import Api, Resource
 
+from authentication import auth
 from decorators import response_filter
 from user_service import verify_and_create_user
 from user_service import verify_login
@@ -35,7 +36,15 @@ class SignUp(Resource):
         return verify_and_create_user(username, email, password)
 
 
-# api.add_resource(Home, "/", "/home")
+class Home(Resource):
+
+    @response_filter
+    @auth.login_required
+    def get(self):
+        return {"ok": "ok"}
+
+
+api.add_resource(Home, "/", "/home")
 api.add_resource(Login, "/login")
 api.add_resource(SignUp, "/signup")
 
