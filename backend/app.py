@@ -16,7 +16,7 @@ app = Flask(__name__)
 api = Api(app)
 
 
-class Login(Resource):
+class Login(Resource):  # hash password getting on get api
 
     @response_filter
     def post(self):
