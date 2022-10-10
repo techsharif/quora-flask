@@ -31,3 +31,10 @@ def validate_email(email: str):
         raise ResponseStatusException(400, "Email is  not valid")
 
     return email
+
+
+def validate_title(title: str):
+    title = title.strip()
+    if len(title) < 3:
+        raise ResponseStatusException(400, "Title should be at least 10 characters")
+    return title

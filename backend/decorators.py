@@ -1,5 +1,4 @@
-import json
-
+from bson.json_util import dumps
 from flask import Response, abort
 from flask_restful import abort
 
@@ -17,7 +16,7 @@ def response(status, message):
 def success(message):
     if message:
         return Response(
-            json.dumps(message),
+            dumps(message),
             mimetype="application/json",
             status=200)
     else:
@@ -35,13 +34,13 @@ def response_filter(function):
             print(rse)
             res = response(
                 rse.status,
-                json.dumps({"message": rse.message}))
+                dumps({"message": rse.message}))
 
         except Exception as e:
             print(e)
             res = response(
                 400,
-                json.dumps({"message": "Unknown error"}))
+                dumps({"message": "Unknown error"}))
         return abort(res)
 
     return wrapper

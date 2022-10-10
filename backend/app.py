@@ -4,10 +4,11 @@ from flask import Flask, request
 from flask_restful import Api, Resource
 
 from authentication import auth
+from database import get_user_by_email, create_post, create_comment
 from decorators import response_filter
 from user_service import verify_and_create_user
 from user_service import verify_login
-from validator import validate_email, validate_password, validate_username
+from validator import validate_email, validate_password, validate_username, validate_title
 
 # import bcrypt
 
@@ -41,10 +42,35 @@ class Home(Resource):
     @response_filter
     @auth.login_required
     def get(self):
-        return {"ok": "ok"}
+        return get_user_by_email(auth.username())
+
+
+class Post(Resource):
+
+    @response_filter
+    @auth.login_required
+    def post(self):
+        postedData = request.get_json()
+        title = validate_title(postedData["title"])
+        create_post(auth.username(), title)
+        return get_user_by_email(auth.username())
+
+
+class Comment(Resource):
+
+    @response_filter
+    @auth.login_required
+    def post(self):
+        postedData = request.get_json()
+        postId = int(postedData["postId"])
+        title = validate_title(postedData["title"])
+        create_comment(auth.username(), postId, title)
+        return get_user_by_email(auth.username())
 
 
 api.add_resource(Home, "/", "/home")
+api.add_resource(Post, "/post")
+api.add_resource(Comment, "/comment")
 api.add_resource(Login, "/login")
 api.add_resource(SignUp, "/signup")
 
