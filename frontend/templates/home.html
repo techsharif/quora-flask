@@ -4,19 +4,23 @@
     {#  <h1></h1>#}
     {#  <h1>Welcome to Diaelectic!!!</h1>#}
     {#</div>#}
-    <div>
-        <br>
-        <form>
-            <div class="mb-3">
+
+    {% if create_post %}
+        <div>
+            <br>
+            <form>
+                <div class="mb-3">
                 <textarea type="text" placeholder="write your post" class="form-control" id="post_title"
                           name="post_title"> </textarea>
-            </div>
-            <div align="center">
-                <button type="submit" class="btn btn-primary">Create Post</button>
-            </div>
+                </div>
+                <div align="center">
+                    <button type="submit" class="btn btn-primary">Create Post</button>
+                </div>
 
-        </form>
-    </div>
+            </form>
+        </div>
+    {% endif %}
+
     <br>
 
 

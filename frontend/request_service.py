@@ -29,6 +29,13 @@ def home_request():
     return process_post_response(response.json())
 
 
+def user_request(username):
+    response = requests.get(HOME_URL + "/" + username, auth=get_auth())
+    if response.status_code != 200:
+        raise Exception(response.json().get("message"))
+    return process_post_response(response.json())
+
+
 def process_post_response(response):
     for post in response:
         post["id"] = post["_id"]["$oid"]

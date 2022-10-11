@@ -4,7 +4,7 @@ from flask import Flask, render_template, make_response, request, redirect, url_
 from flask_restful import Api, Resource
 
 from auth import login, logout
-from request_service import login_request, signup_request, home_request
+from request_service import login_request, signup_request, home_request, user_request
 
 # import bcrypt
 
@@ -18,7 +18,15 @@ class Home(Resource):
     def get(self):
         posts = home_request()
         print(posts)
-        return make_response(render_template("home.html", posts=posts), 200)
+        return make_response(render_template("home.html", posts=posts, create_post=True), 200)
+
+
+class User(Resource):
+    def get(self, username):
+        posts = user_request(username)
+        print(posts)
+        return make_response(render_template("home.html", posts=posts, create_post=username == session["username"]),
+                             200)
 
 
 class Login(Resource):
@@ -72,7 +80,7 @@ api.add_resource(Home, "/", "/home")
 api.add_resource(Login, "/login")
 api.add_resource(Signup, "/signup")
 api.add_resource(Logout, "/logout")
-
+api.add_resource(User, "/<username>")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5008, debug=True)
