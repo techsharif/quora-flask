@@ -25,7 +25,7 @@ class User(Resource):
     def get(self, username):
         posts = user_request(username)
         print(posts)
-        return make_response(render_template("home.html", posts=posts, create_post=username == session["username"]),
+        return make_response(render_template("home.html", posts=posts, create_post=False),
                              200)
 
 
