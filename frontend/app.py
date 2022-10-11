@@ -97,7 +97,7 @@ api.add_resource(Home, "/", "/home")
 api.add_resource(Login, "/login")
 api.add_resource(Signup, "/signup")
 api.add_resource(Logout, "/logout")
-api.add_resource(User, "/<username>")
+api.add_resource(User, "/user/<username>")
 api.add_resource(Post, "/post", "/post/<post_id>")
 api.add_resource(Comment, "/comment/<post_id>", "/comment/<post_id>/<comment_id>")
 

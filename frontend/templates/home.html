@@ -47,7 +47,8 @@
                                 <h5>{{ comment.title }}</h5>
                                 <button class="btn btn-sm btn-danger" type="button"> x</button>
                             </div>
-                            <p>by <b>{{ comment.username }}</b> at <b>{{ comment.created_at }}</b></p>
+                            <p>by <a href="/user/{{ comment.username }}">{{ comment.username }}</a> at
+                                <b>{{ comment.created_at }}</b></p>
                             <hr>
 
                         {% endfor %}
@@ -64,7 +65,7 @@
 
                     <div class="card-footer justify-content-between" style="display: flex; flex-direction: row">
                         <div>{{ post.created_at }}</div>
-                        <div>By <b>{{ post.username }}</b></div>
+                        <div>By <a href="/user/{{ post.username }}">{{ post.username }}</a></div>
                     </div>
                 </div>
             </div>
