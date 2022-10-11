@@ -1,10 +1,5 @@
 {% extends "base.html" %} {% block title %} Home {% endblock %} {% block content %}
 
-    {#<div align="center">#}
-    {#  <h1></h1>#}
-    {#  <h1>Welcome to Diaelectic!!!</h1>#}
-    {#</div>#}
-
     {% if error %}
         <br>
 
@@ -33,6 +28,7 @@
                 <textarea type="text" placeholder="write your post" class="form-control" id="post_title"
                           name="title"> </textarea>
                 </div>
+                <input type="hidden" name="redirect_to" value="{{ redirect_to }}">
                 <div align="center">
                     <button type="submit" class="btn btn-primary">Create Post</button>
                 </div>
@@ -75,6 +71,7 @@
                         <br>
                         <form method="post" action="/comment/{{ post.id }}">
                             <div class="input-group mb-3">
+                                <input type="hidden" name="redirect_to" value="{{ redirect_to }}">
                                 <input name="title" type="text" class="form-control" placeholder="Add your comment"
                                        aria-label="Comment" aria-describedby="button-addon2">
                                 <button class="btn btn-outline-primary" type="submit" id="button-addon2">Comment

@@ -19,17 +19,22 @@ class Home(Resource):
     def get(self):
         error, message = get_message()
         posts = home_request()
-        print(posts)
-        return make_response(render_template("home.html", error=error, message=message, posts=posts, create_post=True), 200)
+        redirect_to = "/home"
+        return make_response(
+            render_template("home.html", error=error, message=message, posts=posts, redirect_to=redirect_to,
+                            create_post=True),
+            200)
 
 
 class User(Resource):
     def get(self, username):
         error, message = get_message()
         posts = user_request(username)
-        print(posts)
-        return make_response(render_template("home.html", error=error, message=message, posts=posts, create_post=False),
-                             200)
+        redirect_to = "/user/" + username
+        return make_response(
+            render_template("home.html", error=error, message=message, posts=posts, redirect_to=redirect_to,
+                            create_post=username == session["username"]),
+            200)
 
 
 class Login(Resource):
@@ -83,23 +88,25 @@ class Post(Resource):
 
     def post(self):
         title = request.form.get("title")
+        redirect_to = request.form.get("redirect_to")
         try:
             create_post_request(title)
         except Exception as e:
             session["error"] = str(e)
-        return redirect(url_for('home'))
+        return redirect(redirect_to)
 
 
 class Comment(Resource):
 
     def post(self, post_id):
         title = request.form.get("title")
+        redirect_to = request.form.get("redirect_to")
         try:
             create_comment_request(post_id, title)
         except Exception as e:
             session["error"] = str(e)
 
-        return redirect(url_for('home'))
+        return redirect(redirect_to)
 
 
 api.add_resource(Home, "/", "/home")
