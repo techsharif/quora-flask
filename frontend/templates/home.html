@@ -8,10 +8,10 @@
     {% if create_post %}
         <div>
             <br>
-            <form>
+            <form method="post" action="/post">
                 <div class="mb-3">
                 <textarea type="text" placeholder="write your post" class="form-control" id="post_title"
-                          name="post_title"> </textarea>
+                          name="title"> </textarea>
                 </div>
                 <div align="center">
                     <button type="submit" class="btn btn-primary">Create Post</button>
@@ -30,42 +30,45 @@
         {% for post in posts %}
 
             <div class="card">
-            <div class="card-header justify-content-between" style="display: flex; flex-direction: row">
-                <h3>{{ post.title }}</h3>
-                <button class="btn btn-sm" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapse{{ post.id }}"
-                        aria-expanded="false" aria-controls="collapse{{ post.id }}">
-                    {{ post.comments.size }} Comments
-                </button>
-            </div>
-
-            <div class="collapse" id="collapse{{ post.id }}">
-                <div class="card-body">
-                    {% for comment in post.comments._items %}
-
-                        <div class="justify-content-between" style="display: flex; flex-direction: row">
-                            <h5>{{ comment.title }}</h5>
-                            <button class="btn btn-sm btn-danger" type="button"> x</button>
-                        </div>
-                        <p>by <b>{{ comment.username }}</b> at <b>{{ comment.created_at }}</b></p>
-                        <hr>
-
-                    {% endfor %}
-                    <br>
-                    <form action="">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Add your comment"
-                                   aria-label="Comment" aria-describedby="button-addon2">
-                            <button class="btn btn-outline-primary" type="button" id="button-addon2">Comment</button>
-                        </div>
-                    </form>
+                <div class="card-header justify-content-between" style="display: flex; flex-direction: row">
+                    <h3>{{ post.title }}</h3>
+                    <button class="btn btn-sm" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{ post.id }}"
+                            aria-expanded="false" aria-controls="collapse{{ post.id }}">
+                        {{ post.comments.size }} Comments
+                    </button>
                 </div>
 
-                <div class="card-footer justify-content-between" style="display: flex; flex-direction: row">
-                    <div>{{ post.created_at }}</div>
-                    <div>By <b>{{ post.username }}</b></div>
+                <div class="collapse" id="collapse{{ post.id }}">
+                    <div class="card-body">
+                        {% for comment in post.comments._items %}
+
+                            <div class="justify-content-between" style="display: flex; flex-direction: row">
+                                <h5>{{ comment.title }}</h5>
+                                <button class="btn btn-sm btn-danger" type="button"> x</button>
+                            </div>
+                            <p>by <b>{{ comment.username }}</b> at <b>{{ comment.created_at }}</b></p>
+                            <hr>
+
+                        {% endfor %}
+                        <br>
+                        <form action="">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Add your comment"
+                                       aria-label="Comment" aria-describedby="button-addon2">
+                                <button class="btn btn-outline-primary" type="button" id="button-addon2">Comment
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card-footer justify-content-between" style="display: flex; flex-direction: row">
+                        <div>{{ post.created_at }}</div>
+                        <div>By <b>{{ post.username }}</b></div>
+                    </div>
                 </div>
             </div>
+            <br>
 
         {% endfor %}
 
@@ -75,6 +78,6 @@
     {% endif %}
 
 
-</div>
+    </div>
 
 {% endblock %}

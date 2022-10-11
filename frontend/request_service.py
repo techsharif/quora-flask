@@ -22,6 +22,12 @@ def signup_request(username, email, password):
         raise Exception(response.json().get("message"))
 
 
+def create_post_request(title):
+    response = requests.post(POST_URL, json={'title': title}, auth=get_auth())
+    if response.status_code != 200:
+        raise Exception(response.json().get("message"))
+
+
 def home_request():
     response = requests.get(HOME_URL, auth=get_auth())
     if response.status_code != 200:
