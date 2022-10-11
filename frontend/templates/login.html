@@ -1,17 +1,22 @@
 {% extends "base.html" %} {% block title %}Login{% endblock %} {% block content %}
 <form method="POST">
   <h3 align="center">Login</h3>
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
   <div class="form-group">
-    <label for="email">Email Address</label>
+    <label for="email">Username</label>
     <input
+            required
       type="text"
-      id="email"
-      name="email"
+      id="username"
+      name="username"
       class="form-control"
-      placeholder="Enter Email"
+      placeholder="Enter Username"
     />
     <label for="password">Password</label>
     <input
+            required
       type="password"
       id="password"
       name="password"
