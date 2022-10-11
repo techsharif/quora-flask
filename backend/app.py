@@ -61,13 +61,11 @@ class Post(Resource):
         postedData = request.get_json()
         title = validate_title(postedData["title"])
         create_post(auth.username(), title)
-        return get_all_post()
 
     @response_filter
     @auth.login_required
     def delete(self, postId):
         delete_post(postId, auth.username())
-        return get_all_post()
 
 
 class Comment(Resource):
@@ -79,7 +77,6 @@ class Comment(Resource):
         postId = validate_id(postId)
         title = validate_title(postedData["title"])
         create_comment(auth.username(), postId, title)
-        return get_all_post()
 
     @response_filter
     @auth.login_required
@@ -87,7 +84,6 @@ class Comment(Resource):
         postId = validate_id(postId)
         commentId = validate_id(commentId)
         delete_comment(postId, commentId, auth.username())
-        return get_all_post()
 
 
 api.add_resource(Home, "/")
