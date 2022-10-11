@@ -4,11 +4,11 @@ from flask import Flask, request
 from flask_restful import Api, Resource
 
 from authentication import auth
-from database import get_user_by_email, create_post, create_comment
+from database import create_post, create_comment, get_all_post
 from decorators import response_filter
 from user_service import verify_and_create_user
 from user_service import verify_login
-from validator import validate_email, validate_password, validate_username, validate_title
+from validator import validate_email, validate_password, validate_username, validate_title, validate_id
 
 # import bcrypt
 
@@ -21,9 +21,9 @@ class Login(Resource):  # hash password getting on get api
     @response_filter
     def post(self):
         postedData = request.get_json()
-        email = validate_email(postedData["email"])
+        username = validate_username(postedData["username"])
         password = validate_password(postedData["password"])
-        verify_login(email, password)
+        verify_login(username, password)
 
 
 class SignUp(Resource):
@@ -42,7 +42,7 @@ class Home(Resource):
     @response_filter
     @auth.login_required
     def get(self):
-        return get_user_by_email(auth.username())
+        return get_all_post()
 
 
 class Post(Resource):
@@ -53,7 +53,7 @@ class Post(Resource):
         postedData = request.get_json()
         title = validate_title(postedData["title"])
         create_post(auth.username(), title)
-        return get_user_by_email(auth.username())
+        return get_all_post()
 
 
 class Comment(Resource):
@@ -62,10 +62,10 @@ class Comment(Resource):
     @auth.login_required
     def post(self):
         postedData = request.get_json()
-        postId = int(postedData["postId"])
+        postId = validate_id(postedData["postId"])
         title = validate_title(postedData["title"])
         create_comment(auth.username(), postId, title)
-        return get_user_by_email(auth.username())
+        return get_all_post()
 
 
 api.add_resource(Home, "/", "/home")

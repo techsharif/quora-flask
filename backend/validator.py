@@ -38,3 +38,10 @@ def validate_title(title: str):
     if len(title) < 3:
         raise ResponseStatusException(400, "Title should be at least 10 characters")
     return title
+
+
+def validate_id(_id: str):
+    _id = _id.strip()
+    if len(_id) < 6:
+        raise ResponseStatusException(400, "Invalid Id")
+    return _id
