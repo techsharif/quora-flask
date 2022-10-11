@@ -4,8 +4,8 @@
         <br>
 
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          {{ error }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
     {% endif %}
@@ -14,8 +14,8 @@
         <br>
 
         <div class="alert alert-info alert-dismissible fade show" role="alert">
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
     {% endif %}
@@ -48,11 +48,34 @@
             <div class="card">
                 <div class="card-header justify-content-between" style="display: flex; flex-direction: row">
                     <h3>{{ post.title }}</h3>
-                    <button class="btn btn-sm" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse{{ post.id }}"
-                            aria-expanded="false" aria-controls="collapse{{ post.id }}">
-                        {{ post.comments.size }} Comments
-                    </button>
+                    <div>
+                        <button class="btn btn-sm" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse{{ post.id }}"
+                                aria-expanded="false" aria-controls="collapse{{ post.id }}">
+                            {{ post.comments.size }} Comments
+                        </button>
+                        <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
+                                data-bs-target="#staticBackdrop{{ post.id }}">
+                            QR
+                        </button>
+                        <div class="modal fade" id="staticBackdrop{{ post.id }}" data-bs-backdrop="static"
+                             data-bs-keyboard="false"
+                             tabindex="-1" aria-labelledby="staticBackdropLabel{{ post.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div align="center" class="modal-body">
+                                        <img class="img"
+                                             src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ post.title }}"
+                                             alt="">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="collapse" id="collapse{{ post.id }}">

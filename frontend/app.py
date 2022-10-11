@@ -17,6 +17,8 @@ app.secret_key = 'super secret key'
 
 class Home(Resource):
     def get(self):
+        if not session.get("username"):
+            return redirect(url_for('login'))
         error, message = get_message()
         posts = home_request()
         redirect_to = ""
