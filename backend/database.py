@@ -77,7 +77,7 @@ def create_post(username, title):  # lookup can be another solution
     db.postCollection.insert_one(
         {
             "title": title,
-            "user": username,
+            "username": username,
             "comments": {
                 "size": 0,
                 "items": {}
@@ -86,6 +86,16 @@ def create_post(username, title):  # lookup can be another solution
             "updated_at": str(datetime.now()),
         }
     )
+
+
+def delete_post(postId, username):  # lookup can be another solution
+    post = get_post_by_id(postId)
+    if not post:
+        raise ResponseStatusException(400, "Post not found")
+    if post["username"] != username:
+        raise ResponseStatusException(400, "Invalid permission")
+
+    db.postCollection.delete_one({"_id": post["_id"]})
 
 
 def create_comment(username, postId, title):

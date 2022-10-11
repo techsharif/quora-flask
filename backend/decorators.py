@@ -27,9 +27,9 @@ def success(message):
 
 
 def response_filter(function):
-    def wrapper(self):
+    def wrapper(*args, **kwargs):
         try:
-            return success(function(self))
+            return success(function(*args, **kwargs))
         except ResponseStatusException as rse:
             print(rse)
             res = response(
