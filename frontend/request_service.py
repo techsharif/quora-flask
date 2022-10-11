@@ -28,8 +28,20 @@ def create_post_request(title):
         raise Exception(response.json().get("message"))
 
 
+def delete_post_request(post_id):
+    response = requests.delete(POST_URL + "/" + post_id, auth=get_auth())
+    if response.status_code != 200:
+        raise Exception(response.json().get("message"))
+
+
 def create_comment_request(postId, title):
     response = requests.post(COMMENT_URL + "/" + postId, json={'title': title}, auth=get_auth())
+    if response.status_code != 200:
+        raise Exception(response.json().get("message"))
+
+
+def delete_comment_request(post_id, comment_id):
+    response = requests.delete(COMMENT_URL + "/" + post_id + "/" + comment_id, auth=get_auth())
     if response.status_code != 200:
         raise Exception(response.json().get("message"))
 

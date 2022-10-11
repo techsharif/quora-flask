@@ -61,14 +61,19 @@
 
                             <div class="justify-content-between" style="display: flex; flex-direction: row">
                                 <h5>{{ comment.title }}</h5>
-                                <button class="btn btn-sm btn-danger" type="button"> x</button>
+
+                                {% if post.username == session.username or comment.username == session.username %}
+                                    <a href="/comment/delete/{{ post.id }}/{{ comment.id }}?redirect_to={{ redirect_to }}"
+                                       class="btn btn-sm btn-danger" type="button"> x</a>
+                                {% endif %}
+
                             </div>
                             <p>by <a href="/user/{{ comment.username }}">{{ comment.username }}</a> at
                                 <b>{{ comment.created_at }}</b></p>
                             <hr>
 
                         {% endfor %}
-                        <br>
+
                         <form method="post" action="/comment/{{ post.id }}">
                             <div class="input-group mb-3">
                                 <input type="hidden" name="redirect_to" value="{{ redirect_to }}">
@@ -81,8 +86,13 @@
                     </div>
 
                     <div class="card-footer justify-content-between" style="display: flex; flex-direction: row">
-                        <div>{{ post.created_at }}</div>
-                        <div>By <a href="/user/{{ post.username }}">{{ post.username }}</a></div>
+                        <div>By <a href="/user/{{ post.username }}">{{ post.username }}</a> at
+                            <b>{{ post.created_at }}</b></div>
+                        <div>
+                            {% if post.username == session.username %}
+                                <a href="/post/delete/{{ post.id }}?redirect_to={{ redirect_to }}" class="text-danger">Delete</a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>

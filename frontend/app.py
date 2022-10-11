@@ -5,9 +5,9 @@ from flask_restful import Api, Resource
 
 from auth import login, logout, get_message
 from request_service import login_request, signup_request, home_request, user_request, create_post_request, \
-    create_comment_request
-
+    create_comment_request, delete_post_request, delete_comment_request
 # import bcrypt
+from utils import process_redirect_to
 
 app = Flask(__name__)
 api = Api(app)
@@ -19,7 +19,7 @@ class Home(Resource):
     def get(self):
         error, message = get_message()
         posts = home_request()
-        redirect_to = "/home"
+        redirect_to = ""
         return make_response(
             render_template("home.html", error=error, message=message, posts=posts, redirect_to=redirect_to,
                             create_post=True),
@@ -30,7 +30,7 @@ class User(Resource):
     def get(self, username):
         error, message = get_message()
         posts = user_request(username)
-        redirect_to = "/user/" + username
+        redirect_to = username
         return make_response(
             render_template("home.html", error=error, message=message, posts=posts, redirect_to=redirect_to,
                             create_post=username == session["username"]),
@@ -86,9 +86,17 @@ class Logout(Resource):
 
 class Post(Resource):
 
+    def get(self, post_id):
+        redirect_to = process_redirect_to(request.args.get("redirect_to"))
+        try:
+            delete_post_request(post_id)
+        except Exception as e:
+            session["error"] = str(e)
+        return redirect(redirect_to)
+
     def post(self):
         title = request.form.get("title")
-        redirect_to = request.form.get("redirect_to")
+        redirect_to = process_redirect_to(request.form.get("redirect_to"))
         try:
             create_post_request(title)
         except Exception as e:
@@ -98,9 +106,17 @@ class Post(Resource):
 
 class Comment(Resource):
 
+    def get(self, post_id, comment_id):
+        redirect_to = process_redirect_to(request.args.get("redirect_to"))
+        try:
+            delete_comment_request(post_id, comment_id)
+        except Exception as e:
+            session["error"] = str(e)
+        return redirect(redirect_to)
+
     def post(self, post_id):
         title = request.form.get("title")
-        redirect_to = request.form.get("redirect_to")
+        redirect_to = process_redirect_to(request.form.get("redirect_to"))
         try:
             create_comment_request(post_id, title)
         except Exception as e:
@@ -114,8 +130,8 @@ api.add_resource(Login, "/login")
 api.add_resource(Signup, "/signup")
 api.add_resource(Logout, "/logout")
 api.add_resource(User, "/user/<username>")
-api.add_resource(Post, "/post", "/post/<post_id>")
-api.add_resource(Comment, "/comment/<post_id>", "/comment/<post_id>/<comment_id>")
+api.add_resource(Post, "/post", "/post/delete/<post_id>")
+api.add_resource(Comment, "/comment/<post_id>", "/comment/delete/<post_id>/<comment_id>")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5008, debug=True)
