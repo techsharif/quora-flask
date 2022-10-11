@@ -56,6 +56,10 @@ def get_all_post():
     return db.postCollection.find().sort("created_at", -1)
 
 
+def get_all_post_by_username(username):
+    return db.postCollection.find({"username": username}).sort("created_at", -1)
+
+
 def create_user(username, email, password):
     try:
         db.userCollection.insert_one({
