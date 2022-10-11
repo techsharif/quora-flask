@@ -98,6 +98,26 @@ def delete_post(postId, username):  # lookup can be another solution
     db.postCollection.delete_one({"_id": post["_id"]})
 
 
+def delete_comment(postId, commentId, username):  # lookup can be another solution
+    post = get_post_by_id(postId)
+    if not post:
+        raise ResponseStatusException(400, "Post not found")
+
+    comment = post["comments"]["items"].get(commentId)
+
+    if not comment:
+        raise ResponseStatusException(400, "Comment not found")
+
+    if post["username"] != username and comment["username"] != username:
+        raise ResponseStatusException(400, "Invalid permission")
+
+    comments = post["comments"]
+    comments["size"] -= 1
+    del comments["items"][commentId]
+
+    db.postCollection.update_one({"_id": ObjectId(postId)}, {"$set": {"comments": comments}})
+
+
 def create_comment(username, postId, title):
     post = get_post_by_id(postId)
     if not post:

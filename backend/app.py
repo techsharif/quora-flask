@@ -4,7 +4,7 @@ from flask import Flask, request
 from flask_restful import Api, Resource
 
 from authentication import auth
-from database import create_post, create_comment, get_all_post, delete_post
+from database import create_post, create_comment, get_all_post, delete_post, delete_comment
 from decorators import response_filter
 from user_service import verify_and_create_user
 from user_service import verify_login
@@ -66,11 +66,17 @@ class Comment(Resource):
 
     @response_filter
     @auth.login_required
-    def post(self, postId, commentId=None):
+    def post(self, postId):
         postedData = request.get_json()
         postId = validate_id(postId)
         title = validate_title(postedData["title"])
         create_comment(auth.username(), postId, title)
+        return get_all_post()
+
+    @response_filter
+    @auth.login_required
+    def delete(self, postId, commentId):
+        delete_comment(postId, commentId, auth.username())
         return get_all_post()
 
 
