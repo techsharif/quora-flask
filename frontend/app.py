@@ -3,7 +3,7 @@ from urllib import request
 from flask import Flask, render_template, make_response, request, redirect, url_for, session
 from flask_restful import Api, Resource
 
-from auth import login, logout
+from auth import login, logout, get_message
 from request_service import login_request, signup_request, home_request, user_request, create_post_request, \
     create_comment_request
 
@@ -17,16 +17,18 @@ app.secret_key = 'super secret key'
 
 class Home(Resource):
     def get(self):
+        error, message = get_message()
         posts = home_request()
         print(posts)
-        return make_response(render_template("home.html", posts=posts, create_post=True), 200)
+        return make_response(render_template("home.html", error=error, message=message, posts=posts, create_post=True), 200)
 
 
 class User(Resource):
     def get(self, username):
+        error, message = get_message()
         posts = user_request(username)
         print(posts)
-        return make_response(render_template("home.html", posts=posts, create_post=False),
+        return make_response(render_template("home.html", error=error, message=message, posts=posts, create_post=False),
                              200)
 
 
@@ -81,7 +83,10 @@ class Post(Resource):
 
     def post(self):
         title = request.form.get("title")
-        create_post_request(title)
+        try:
+            create_post_request(title)
+        except Exception as e:
+            session["error"] = str(e)
         return redirect(url_for('home'))
 
 
@@ -89,7 +94,11 @@ class Comment(Resource):
 
     def post(self, post_id):
         title = request.form.get("title")
-        create_comment_request(post_id, title)
+        try:
+            create_comment_request(post_id, title)
+        except Exception as e:
+            session["error"] = str(e)
+
         return redirect(url_for('home'))
 
 

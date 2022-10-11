@@ -5,6 +5,26 @@
     {#  <h1>Welcome to Diaelectic!!!</h1>#}
     {#</div>#}
 
+    {% if error %}
+        <br>
+
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ error }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    {% endif %}
+
+    {% if message %}
+        <br>
+
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    {% endif %}
+
     {% if create_post %}
         <div>
             <br>
