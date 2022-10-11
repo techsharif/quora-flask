@@ -26,4 +26,17 @@ def home_request():
     response = requests.get(HOME_URL, auth=get_auth())
     if response.status_code != 200:
         raise Exception(response.json().get("message"))
-    return response.json()
+    return process_post_response(response.json())
+
+
+def process_post_response(response):
+    for post in response:
+        post["id"] = post["_id"]["$oid"]
+        post["comments"]["_items"] = process_comments(post["comments"]["items"])
+    return response
+
+
+def process_comments(items: dict):
+    comments = list(items.values())
+    comments.sort(key=lambda comment: comment["created_at"])
+    return comments

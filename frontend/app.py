@@ -1,5 +1,4 @@
 from urllib import request
-from urllib import request
 
 from flask import Flask, render_template, make_response, request, redirect, url_for, session
 from flask_restful import Api, Resource
@@ -17,8 +16,9 @@ app.secret_key = 'super secret key'
 
 class Home(Resource):
     def get(self):
-        posts = home_request();
-        return make_response(render_template("home.html"), 200)
+        posts = home_request()
+        print(posts)
+        return make_response(render_template("home.html", posts=posts), 200)
 
 
 class Login(Resource):

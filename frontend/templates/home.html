@@ -20,47 +20,57 @@
     <br>
 
 
-    <div class="card">
-        <div class="card-header justify-content-between" style="display: flex; flex-direction: row">
-            <div>Title</div>
-            <button class="btn btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
-                    aria-expanded="false" aria-controls="collapseExample">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                     class="bi bi-chevron-down" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                          d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                </svg>
-            </button>
-        </div>
-        <div class="collapse" id="collapseExample">
-            <div class="card-body">
-                <div class="justify-content-between" style="display: flex; flex-direction: row">
-                    <div>Comment 1</div>
-                    <button class="btn btn-sm btn-danger" type="button"> x </button>
-                </div>
-                <hr>
-                <div class="justify-content-between" style="display: flex; flex-direction: row">
-                    <div>Comment 2</div>
-                    <button class="btn btn-sm btn-danger" type="button"> x </button>
-                </div>
-                <hr>
-                <br>
-                <form action="">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Add your comment"
-                               aria-label="Comment" aria-describedby="button-addon2">
-                        <button class="btn btn-outline-primary" type="button" id="button-addon2">Comment</button>
-                    </div>
-                </form>
+
+    {% if posts %}
+
+        {% for post in posts %}
+
+            <div class="card">
+            <div class="card-header justify-content-between" style="display: flex; flex-direction: row">
+                <h3>{{ post.title }}</h3>
+                <button class="btn btn-sm" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse{{ post.id }}"
+                        aria-expanded="false" aria-controls="collapse{{ post.id }}">
+                    {{ post.comments.size }} Comments
+                </button>
             </div>
 
-            <div class="card-footer justify-content-between" style="display: flex; flex-direction: row">
-                <div>Date</div>
-                <div>By Username</div>
+            <div class="collapse" id="collapse{{ post.id }}">
+                <div class="card-body">
+                    {% for comment in post.comments._items %}
+
+                        <div class="justify-content-between" style="display: flex; flex-direction: row">
+                            <h5>{{ comment.title }}</h5>
+                            <button class="btn btn-sm btn-danger" type="button"> x</button>
+                        </div>
+                        <p>by <b>{{ comment.username }}</b> at <b>{{ comment.created_at }}</b></p>
+                        <hr>
+
+                    {% endfor %}
+                    <br>
+                    <form action="">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Add your comment"
+                                   aria-label="Comment" aria-describedby="button-addon2">
+                            <button class="btn btn-outline-primary" type="button" id="button-addon2">Comment</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer justify-content-between" style="display: flex; flex-direction: row">
+                    <div>{{ post.created_at }}</div>
+                    <div>By <b>{{ post.username }}</b></div>
+                </div>
             </div>
-        </div>
+
+        {% endfor %}
+
+    {% else %}
+        <p>No post available</p>
+
+    {% endif %}
 
 
-    </div>
+</div>
 
 {% endblock %}
