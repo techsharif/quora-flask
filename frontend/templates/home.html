@@ -52,11 +52,11 @@
 
                         {% endfor %}
                         <br>
-                        <form action="">
+                        <form method="post" action="/comment/{{ post.id }}">
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Add your comment"
+                                <input name="title" type="text" class="form-control" placeholder="Add your comment"
                                        aria-label="Comment" aria-describedby="button-addon2">
-                                <button class="btn btn-outline-primary" type="button" id="button-addon2">Comment
+                                <button class="btn btn-outline-primary" type="submit" id="button-addon2">Comment
                                 </button>
                             </div>
                         </form>

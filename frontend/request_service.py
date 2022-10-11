@@ -28,6 +28,12 @@ def create_post_request(title):
         raise Exception(response.json().get("message"))
 
 
+def create_comment_request(postId, title):
+    response = requests.post(COMMENT_URL + "/" + postId, json={'title': title}, auth=get_auth())
+    if response.status_code != 200:
+        raise Exception(response.json().get("message"))
+
+
 def home_request():
     response = requests.get(HOME_URL, auth=get_auth())
     if response.status_code != 200:

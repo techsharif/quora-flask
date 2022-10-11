@@ -4,7 +4,8 @@ from flask import Flask, render_template, make_response, request, redirect, url_
 from flask_restful import Api, Resource
 
 from auth import login, logout
-from request_service import login_request, signup_request, home_request, user_request, create_post_request
+from request_service import login_request, signup_request, home_request, user_request, create_post_request, \
+    create_comment_request
 
 # import bcrypt
 
@@ -86,9 +87,10 @@ class Post(Resource):
 
 class Comment(Resource):
 
-    def get(self):
-        logout()
-        return redirect(url_for('login'))
+    def post(self, post_id):
+        title = request.form.get("title")
+        create_comment_request(post_id, title)
+        return redirect(url_for('home'))
 
 
 api.add_resource(Home, "/", "/home")
