@@ -43,6 +43,8 @@ class Login(Resource):
 
 class Signup(Resource):
     def get(self):
+        if session.get("username"):
+            return redirect(url_for('home'))
         return make_response(render_template("signup.html"), 200)
 
     def post(self):
@@ -57,7 +59,7 @@ class Signup(Resource):
             return redirect(url_for('home'))
         except Exception as e:
             print(e)
-            return make_response(render_template("login.html", error=str(e)), 200)
+            return make_response(render_template("signup.html", error=str(e)), 200)
 
 
 class Logout(Resource):
