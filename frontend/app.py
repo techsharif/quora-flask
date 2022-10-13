@@ -1,7 +1,7 @@
 from urllib import request
 
-from flask import Flask, render_template, make_response, request, redirect, url_for, session
-from flask_restful import Api, Resource
+from flask import Flask, render_template, request, redirect, url_for, session
+from flask.views import MethodView
 
 from auth import login, logout, get_message
 from request_service import login_request, signup_request, home_request, user_request, create_post_request, \
@@ -10,40 +10,36 @@ from request_service import login_request, signup_request, home_request, user_re
 from utils import process_redirect_to
 
 app = Flask(__name__)
-api = Api(app)
 
 app.secret_key = 'super secret key'
 
 
-class Home(Resource):
+class Home(MethodView):
+
     def get(self):
         if not session.get("username"):
             return redirect(url_for('login'))
         error, message = get_message()
         posts = home_request()
         redirect_to = ""
-        return make_response(
-            render_template("home.html", error=error, message=message, posts=posts, redirect_to=redirect_to,
-                            create_post=True),
-            200)
+        return render_template("home.html", error=error, message=message, posts=posts, redirect_to=redirect_to,
+                               create_post=True)
 
 
-class User(Resource):
+class User(MethodView):
     def get(self, username):
         error, message = get_message()
         posts = user_request(username)
         redirect_to = username
-        return make_response(
-            render_template("home.html", error=error, message=message, posts=posts, redirect_to=redirect_to,
-                            create_post=username == session["username"]),
-            200)
+        return render_template("home.html", error=error, message=message, posts=posts, redirect_to=redirect_to,
+                               create_post=username == session["username"])
 
 
-class Login(Resource):
+class Login(MethodView):
     def get(self):
         if session.get("username"):
             return redirect(url_for('home'))
-        return make_response(render_template("login.html"), 200)
+        return render_template("login.html")
 
     def post(self):
         username = request.form.get("username")
@@ -55,14 +51,14 @@ class Login(Resource):
             return redirect(url_for('home'))
         except Exception as e:
             print(e)
-            return make_response(render_template("login.html", error=str(e)), 200)
+            return render_template("login.html", error=str(e))
 
 
-class Signup(Resource):
+class Signup(MethodView):
     def get(self):
         if session.get("username"):
             return redirect(url_for('home'))
-        return make_response(render_template("signup.html"), 200)
+        return render_template("signup.html")
 
     def post(self):
 
@@ -76,17 +72,17 @@ class Signup(Resource):
             return redirect(url_for('home'))
         except Exception as e:
             print(e)
-            return make_response(render_template("signup.html", error=str(e)), 200)
+            return render_template("signup.html", error=str(e))
 
 
-class Logout(Resource):
+class Logout(MethodView):
 
     def get(self):
         logout()
         return redirect(url_for('login'))
 
 
-class Post(Resource):
+class Post(MethodView):
 
     def get(self, post_id):
         redirect_to = process_redirect_to(request.args.get("redirect_to"))
@@ -106,7 +102,7 @@ class Post(Resource):
         return redirect(redirect_to)
 
 
-class Comment(Resource):
+class Comment(MethodView):
 
     def get(self, post_id, comment_id):
         redirect_to = process_redirect_to(request.args.get("redirect_to"))
@@ -127,13 +123,16 @@ class Comment(Resource):
         return redirect(redirect_to)
 
 
-api.add_resource(Home, "/", "/home")
-api.add_resource(Login, "/login")
-api.add_resource(Signup, "/signup")
-api.add_resource(Logout, "/logout")
-api.add_resource(User, "/user/<username>")
-api.add_resource(Post, "/post", "/post/delete/<post_id>")
-api.add_resource(Comment, "/comment/<post_id>", "/comment/delete/<post_id>/<comment_id>")
+app.add_url_rule("/", view_func=Home.as_view("root"))
+app.add_url_rule("/home", view_func=Home.as_view("home"))
+app.add_url_rule("/login", view_func=Login.as_view("login"))
+app.add_url_rule("/signup", view_func=Signup.as_view("signup"))
+app.add_url_rule("/logout", view_func=Logout.as_view("logout"))
+app.add_url_rule("/user/<username>", view_func=User.as_view("user"))
+app.add_url_rule("/post", view_func=Post.as_view("post"))
+app.add_url_rule("/post/delete/<post_id>", view_func=Post.as_view("delete-post"))
+app.add_url_rule("/comment/<post_id>", view_func=Comment.as_view("comment"))
+app.add_url_rule("/comment/delete/<post_id>/<comment_id>", view_func=Comment.as_view("delete-comment"))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5008, debug=True)
