@@ -5,7 +5,7 @@ from flask_restful import Api, Resource
 
 from authentication import auth
 from database import create_post, create_comment, get_all_post, delete_post, delete_comment, get_all_post_by_username, \
-    get_filtered_post, get_post_by_id
+    get_filtered_post, get_post_details
 from decorators import response_filter
 from user_service import verify_and_create_user
 from user_service import verify_login
@@ -63,7 +63,7 @@ class Post(Resource):
     @response_filter
     @auth.login_required
     def get(self, postId):
-        get_post_by_id(postId)
+        return get_post_details(postId)
 
     @response_filter
     @auth.login_required

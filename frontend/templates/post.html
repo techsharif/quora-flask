@@ -21,16 +21,14 @@
     {% endif %}
 
 
-
+    <br>
 
     {% if post %}
         <div class="card">
             <div class="card-header justify-content-between" style="display: flex; flex-direction: row">
                 <h3>{{ post.title }}</h3>
                 <div>
-                    <button class="btn btn-sm" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse{{ post.id }}"
-                            aria-expanded="false" aria-controls="collapse{{ post.id }}">
+                    <button class="btn btn-sm" type="button">
                         {{ post.comments.size }} Comments
                     </button>
                     <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
@@ -57,7 +55,7 @@
                 </div>
             </div>
 
-            <div class="collapse" id="collapse{{ post.id }}">
+            <div>
                 <div class="card-body">
                     {% for comment in post.comments._items %}
 
@@ -92,7 +90,7 @@
                         <b>{{ post.created_at }}</b></div>
                     <div>
                         {% if post.username == session.username %}
-                            <a href="/post/delete/{{ post.id }}?redirect_to={{ redirect_to }}"
+                            <a href="/post/delete/{{ post.id }}?redirect_to=_home"
                                class="text-danger">Delete</a>
                         {% endif %}
                     </div>

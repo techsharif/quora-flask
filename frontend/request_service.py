@@ -35,7 +35,7 @@ def delete_post_request(post_id):
 
 
 def get_post_request(post_id):
-    response = requests.delete(POST_URL + "/" + post_id, auth=get_auth())
+    response = requests.get(POST_URL + "/" + post_id, auth=get_auth())
     if response.status_code != 200:
         raise Exception(response.json().get("message"))
 
