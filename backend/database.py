@@ -58,7 +58,6 @@ def get_all_post():
 
 
 def get_filtered_post(searchItem):
-    print("filtered", searchItem)
     return db.postCollection.find({"$text": {"$search": searchItem}}, {"score": {"$meta": "textScore"}})
 
 
