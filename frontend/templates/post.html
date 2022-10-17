@@ -42,7 +42,7 @@
                             <div class="modal-content">
                                 <div align="center" class="modal-body">
                                     <img class="img"
-                                         src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ post.title }}"
+                                         src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http://{{ request.host }}/details/{{ post.id }}"
                                          alt="">
                                 </div>
                                 <div class="modal-footer">

@@ -17,6 +17,7 @@ app.secret_key = 'super secret key'
 class Home(MethodView):
 
     def get(self):
+        print(request.host)
         if not session.get("username"):
             return redirect(url_for('login'))
         error, message = get_message()
