@@ -34,6 +34,14 @@ def delete_post_request(post_id):
         raise Exception(response.json().get("message"))
 
 
+def get_post_request(post_id):
+    response = requests.delete(POST_URL + "/" + post_id, auth=get_auth())
+    if response.status_code != 200:
+        raise Exception(response.json().get("message"))
+
+    return process_post(response.json())
+
+
 def create_comment_request(postId, title):
     response = requests.post(COMMENT_URL + "/" + postId, json={'title': title}, auth=get_auth())
     if response.status_code != 200:
@@ -63,9 +71,14 @@ def user_request(username):
 
 def process_post_response(response):
     for post in response:
-        post["id"] = post["_id"]["$oid"]
-        post["comments"]["_items"] = process_comments(post["comments"]["items"])
+        process_post(post)
     return response
+
+
+def process_post(post):
+    post["id"] = post["_id"]["$oid"]
+    post["comments"]["_items"] = process_comments(post["comments"]["items"])
+    return post
 
 
 def process_comments(items: dict):

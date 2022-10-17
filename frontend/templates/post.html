@@ -1,0 +1,111 @@
+{% extends "base.html" %} {% block title %} Home {% endblock %} {% block content %}
+
+    {% if error %}
+        <br>
+
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    {% endif %}
+
+    {% if message %}
+        <br>
+
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    {% endif %}
+
+
+
+
+    {% if post %}
+        <div class="card">
+            <div class="card-header justify-content-between" style="display: flex; flex-direction: row">
+                <h3>{{ post.title }}</h3>
+                <div>
+                    <button class="btn btn-sm" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{ post.id }}"
+                            aria-expanded="false" aria-controls="collapse{{ post.id }}">
+                        {{ post.comments.size }} Comments
+                    </button>
+                    <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop{{ post.id }}">
+                        QR
+                    </button>
+                    <div class="modal fade" id="staticBackdrop{{ post.id }}" data-bs-backdrop="static"
+                         data-bs-keyboard="false"
+                         tabindex="-1" aria-labelledby="staticBackdropLabel{{ post.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div align="center" class="modal-body">
+                                    <img class="img"
+                                         src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ post.title }}"
+                                         alt="">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapse" id="collapse{{ post.id }}">
+                <div class="card-body">
+                    {% for comment in post.comments._items %}
+
+                        <div class="justify-content-between" style="display: flex; flex-direction: row">
+                            <h5>{{ comment.title }}</h5>
+
+                            {% if post.username == session.username or comment.username == session.username %}
+                                <a href="/comment/delete/{{ post.id }}/{{ comment.id }}?redirect_to={{ redirect_to }}"
+                                   class="btn btn-sm btn-danger" type="button"> x</a>
+                            {% endif %}
+
+                        </div>
+                        <p>by <a href="/user/{{ comment.username }}">{{ comment.username }}</a> at
+                            <b>{{ comment.created_at }}</b></p>
+                        <hr>
+
+                    {% endfor %}
+
+                    <form method="post" action="/comment/{{ post.id }}">
+                        <div class="input-group mb-3">
+                            <input type="hidden" name="redirect_to" value="{{ redirect_to }}">
+                            <input name="title" type="text" class="form-control" placeholder="Add your comment"
+                                   aria-label="Comment" aria-describedby="button-addon2">
+                            <button class="btn btn-outline-primary" type="submit" id="button-addon2">Comment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer justify-content-between" style="display: flex; flex-direction: row">
+                    <div>By <a href="/user/{{ post.username }}">{{ post.username }}</a> at
+                        <b>{{ post.created_at }}</b></div>
+                    <div>
+                        {% if post.username == session.username %}
+                            <a href="/post/delete/{{ post.id }}?redirect_to={{ redirect_to }}"
+                               class="text-danger">Delete</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+
+    {% else %}
+        <p>No post available</p>
+    {% endif %}
+
+
+    </div>
+
+{% endblock %}
