@@ -33,7 +33,7 @@ class User(MethodView):
         posts = user_request(username)
         redirect_to = "_user_" + username
         return render_template("home.html", error=error, message=message, posts=posts, redirect_to=redirect_to,
-                               create_post=username == session["username"])
+                               create_post=username == session["username"], user_page=True)
 
 
 class Login(MethodView):

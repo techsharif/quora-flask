@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% block title %} Home {% endblock %} {% block content %}
+{% extends "base.html" %} {% block title %} {% if user_page %} User {% else %} Home {% endif %} {% endblock %}
+{% block content %}
 
     {% if error %}
         <br>
@@ -19,15 +20,18 @@
         </div>
 
     {% endif %}
-    <br>
-    <form method="get">
-        <div class="input-group mb-3">
-            <input name="search" type="text" class="form-control" placeholder="Search . . ."
-                   aria-label="Comment" aria-describedby="button-addon2">
-            <button class="btn btn-outline-success" type="submit" id="button-addon2">Search
-            </button>
-        </div>
-    </form>
+    {% if not user_page %}
+        <br>
+        <form method="get">
+            <div class="input-group mb-3">
+                <input name="search" type="text" class="form-control" placeholder="Search . . ."
+                       aria-label="Comment" aria-describedby="button-addon2">
+                <button class="btn btn-outline-success" type="submit" id="button-addon2">Search
+                </button>
+            </div>
+        </form>
+
+    {% endif %}
 
     {% if create_post %}
         <div>
