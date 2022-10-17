@@ -4,7 +4,8 @@ from flask import Flask, request
 from flask_restful import Api, Resource
 
 from authentication import auth
-from database import create_post, create_comment, get_all_post, delete_post, delete_comment, get_all_post_by_username
+from database import create_post, create_comment, get_all_post, delete_post, delete_comment, get_all_post_by_username, \
+    get_filtered_post
 from decorators import response_filter
 from user_service import verify_and_create_user
 from user_service import verify_login
@@ -42,7 +43,12 @@ class Home(Resource):
     @response_filter
     @auth.login_required
     def get(self):
-        return get_all_post()
+        print("home")
+        searchItem = request.args.get("search", "").strip()
+        if searchItem:
+            return get_filtered_post(searchItem)
+        else:
+            return get_all_post()
 
 
 class User(Resource):

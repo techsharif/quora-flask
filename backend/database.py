@@ -14,6 +14,7 @@ class DB:
         self.db = self.client.userdatabase
         self.userCollection = self.db["users"]
         self.postCollection = self.db["posts"]
+        self.postCollection.create_index(([('title', 'text')]))
         print("Database Initiated")
 
 
@@ -54,6 +55,10 @@ def get_post_by_id(id):
 
 def get_all_post():
     return db.postCollection.find().sort("created_at", -1)
+
+
+def get_filtered_post(searchItem):
+    return db.postCollection.find({"$text": {"$search": searchItem}}, {"score": {"$meta": "textScore"}})
 
 
 def get_all_post_by_username(username):
