@@ -20,7 +20,8 @@ class Home(MethodView):
         if not session.get("username"):
             return redirect(url_for('login'))
         error, message = get_message()
-        posts = home_request()
+        search = request.args.get("search", "").strip()
+        posts = home_request(search)
         redirect_to = ""
         return render_template("home.html", error=error, message=message, posts=posts, redirect_to=redirect_to,
                                create_post=True)

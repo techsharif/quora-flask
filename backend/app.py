@@ -43,7 +43,6 @@ class Home(Resource):
     @response_filter
     @auth.login_required
     def get(self):
-        print("home")
         searchItem = request.args.get("search", "").strip()
         if searchItem:
             return get_filtered_post(searchItem)

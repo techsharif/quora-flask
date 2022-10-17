@@ -46,8 +46,10 @@ def delete_comment_request(post_id, comment_id):
         raise Exception(response.json().get("message"))
 
 
-def home_request():
-    response = requests.get(HOME_URL, auth=get_auth())
+def home_request(search):
+    url = HOME_URL + "?search=" + search if search else HOME_URL
+    print(url)
+    response = requests.get(url, auth=get_auth())
     if response.status_code != 200:
         raise Exception(response.json().get("message"))
     return process_post_response(response.json())
